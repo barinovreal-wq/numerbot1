@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Цифровой психоанализ</title>
+  <style>
+    /* ——— Базовые стили, адаптированные для мобильных устройств ——— */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #F5F3F7;
+      font-family: 'Roboto', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 16px 12px;
+      margin: 0;
+    }
+
+    .cpa-final {
+      max-width: 480px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 20px 30px;
+      background: #F5F3F7;
+      border-radius: 24px;
+      font-family: 'Roboto', Arial, sans-serif;
+      text-align: center;
+      box-shadow: none;
+    }
+
+    .cpa-final .input-row {
+      display: flex;
+      width: 100%;
+      margin: 0 auto 20px;
+      border: 1px solid #323232;
+      box-sizing: border-box;
+    }
+
+    .cpa-final .date-input {
+      flex: 1;
+      padding: 20px 16px;
+      border: none;
+      border-right: 1px solid #323232;
+      border-radius: 0;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      background: #F5F3F7;
+      color: #323232;
+      font-family: 'Roboto Slab', serif;
+      letter-spacing: 0;
+      min-width: 0;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .cpa-final .date-input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .cpa-final .btn {
+      flex: 1;
+      padding: 20px 16px;
+      border: none;
+      background: #F5F3F7;
+      color: #323232;
+      border-radius: 0;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Roboto Slab', serif;
+      cursor: pointer;
+      letter-spacing: .5px;
+      white-space: nowrap;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cpa-final .btn:hover,
+    .cpa-final .btn:focus {
+      background: #F5F3F7;
+      border-color: #323232;
+      box-shadow: none;
+      outline: none;
+    }
+
+    .cpa-final .btn:active {
+      transform: none;
+    }
+
+    .cpa-final .matrix-wrap {
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .cpa-final .matrix {
+      border-collapse: collapse;
+      width: 100%;
+      background: #F5F3F7;
+      border: 1px solid #323232;
+      box-sizing: border-box;
+    }
+
+    .cpa-final .matrix td {
+      border: 1px solid #323232;
+      padding: 12px 6px;
+      text-align: center;
+      vertical-align: middle;
+      background: #F5F3F7;
+      min-width: 44px;
+    }
+
+    .cpa-final .matrix .extra-cell {
+      background: #F5F3F7;
+    }
+
+    .cpa-final .matrix .digit {
+      font-family: 'Roboto Slab', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #323232;
+      display: block;
+      line-height: 1.3;
+    }
+
+    .cpa-final .matrix .label {
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #575757;
+      display: block;
+      margin-top: 2px;
+      letter-spacing: .2px;
+    }
+
+    .cpa-final .matrix td.empty .digit {
+      color: #323232;
+      opacity: .3;
+    }
+
+    .cpa-final .descriptions {
+      margin-top: 28px;
+      text-align: left;
+      display: none;
+      animation: fadeInUp .4s ease;
+    }
+
+    .cpa-final .descriptions.show {
+      display: block;
+    }
+
+    .cpa-final .descriptions .item {
+      margin-bottom: 0;
+      padding: 0;
+      background: #F5F3F7;
+      border-radius: 0;
+      text-align: left;
+    }
+
+    .cpa-final .descriptions .item .combo-digits {
+      font-family: 'Roboto Slab', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #323232;
+      margin: 0 0 8px 0;
+      letter-spacing: .3px;
+      line-height: 1.4;
+    }
+
+    .cpa-final .descriptions .item .short-desc {
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: #575757;
+      margin: 0 0 8px 0;
+      line-height: 1.6;
+    }
+
+    .cpa-final .descriptions .item .toggle-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: 'Roboto Slab', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #323232;
+      cursor: pointer;
+      display: inline;
+      margin: 8px 0 0;
+      transition: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cpa-final .descriptions .item .toggle-btn:hover {
+      text-decoration: none;
+    }
+
+    .cpa-final .descriptions .item .toggle-btn:active {
+      transform: none;
+      outline: none;
+    }
+
+    .cpa-final .descriptions .item .full-desc {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .cpa-final .descriptions .item .full-desc.open {
+      display: block;
+    }
+
+    .cpa-final .descriptions .item p {
+      font-family: 'Roboto', sans-serif !important;
+      font-size: 16px !important;
+      font-weight: 400 !important;
+      font-style: normal !important;
+      line-height: 1.6 !important;
+      letter-spacing: .2px !important;
+      margin: 0 0 8px 0;
+      color: #575757;
+      white-space: normal;
+    }
+
+    .cpa-final .descriptions .item p strong {
+      color: #323232;
+      font-weight: 700 !important;
+      font-style: normal !important;
+      font-family: 'Roboto Slab', serif !important;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cpa-final .result {
+      display: none;
+      animation: fadeInUp .4s ease;
+    }
+
+    .cpa-final .result.show {
+      display: block;
+    }
+
+    .cpa-final .forecast {
+      margin-top: 24px;
+      text-align: left;
+      padding-top: 0;
+    }
+
+    .cpa-final .forecast .year-item {
+      margin-bottom: 10px;
+      padding-bottom: 0;
+      border-bottom: none;
+      cursor: pointer;
+      display: block;
+    }
+
+    .cpa-final .forecast .year-item .year-label {
+      font-family: 'Roboto Slab', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #323232;
+      display: block;
+      user-select: none;
+      padding: 2px 0;
+    }
+
+    .cpa-final .forecast .year-item .year-label .arrow {
+      font-weight: 400;
+      color: #575757;
+      margin-left: 6px;
+      display: inline-block;
+      transition: transform .2s;
+    }
+
+    .cpa-final .forecast .year-item .year-label .arrow.open {
+      transform: rotate(180deg);
+    }
+
+    .cpa-final .forecast .year-item .year-desc {
+      display: none;
+      margin-top: 8px;
+      padding-left: 4px;
+      padding-bottom: 6px;
+    }
+
+    .cpa-final .forecast .year-item .year-desc.open {
+      display: block;
+    }
+
+    .cpa-final .forecast .year-item .year-desc .type-name {
+      font-family: 'Roboto Slab', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #323232;
+      margin-bottom: 8px;
+    }
+
+    .cpa-final .forecast .year-item .year-desc p {
+      font-family: 'Roboto', sans-serif !important;
+      font-size: 16px !important;
+      font-weight: 400 !important;
+      font-style: normal !important;
+      line-height: 1.6 !important;
+      letter-spacing: .2px !important;
+      margin: 0 0 6px 0;
+      color: #575757;
+      white-space: normal;
+    }
+
+    .cpa-final .forecast .year-item .year-desc p strong {
+      color: #323232;
+      font-weight: 700 !important;
+      font-style: normal !important;
+    }
+
+    .cpa-final .hexagram {
+      margin-top: 28px;
+      text-align: left;
+      padding: 16px 0 0;
+      border-top: 1px solid #E0E0E0;
+    }
+
+    .cpa-final .hexagram .hex-title {
+      font-family: 'Roboto Slab', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #323232;
+      margin-bottom: 0;
+    }
+
+    .cpa-final .usin {
+      margin-top: 28px;
+      text-align: left;
+      padding: 16px 0 0;
+      border-top: 1px solid #E0E0E0;
+    }
+
+    .cpa-final .usin .usin-title {
+      font-family: 'Roboto Slab', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #323232;
+      margin-bottom: 12px;
+    }
+
+    .cpa-final .usin table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      background: #F5F3F7;
+      border: 1px solid #323232;
+    }
+
+    .cpa-final .usin th {
+      background: #E8E6EC;
+      color: #323232;
+      font-weight: 700;
+      padding: 8px 4px;
+      border: 1px solid #323232;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .cpa-final .usin td {
+      border: 1px solid #323232;
+      padding: 6px 4px;
+      vertical-align: middle;
+      text-align: center;
+      color: #323232;
+      font-size: 13px;
+    }
+
+    .cpa-final .usin .element-name {
+      font-weight: 700;
+      font-family: 'Roboto Slab', serif;
+    }
+
+    .cpa-final .usin .status {
+      font-weight: 400;
+      color: #575757;
+    }
+
+    .cpa-final .usin .status.pustota { color: #B0B0B0; }
+    .cpa-final .usin .status.slabost { color: #8B7D6B; }
+    .cpa-final .usin .status.norma { color: #3A7D44; }
+    .cpa-final .usin .status.nestabil { color: #D48C34; }
+    .cpa-final .usin .status.peregruz { color: #C0392B; }
+
+    .cpa-final .usin .anomaly {
+      font-size: 12px;
+      color: #8B0000;
+      font-weight: 700;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .cpa-final .usin .anomaly.frozen {
+      color: #2C3E50;
+    }
+
+    .cpa-final .usin .anomaly.reversed {
+      color: #8B0000;
+    }
+
+    .cpa-final .usin .usin-note {
+      margin-top: 12px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      color: #575757;
+      line-height: 1.6;
+    }
+
+    .cpa-final .usin .usin-note p {
+      margin: 0 0 4px 0;
+      padding: 0;
+    }
+
+    .cpa-final .usin .usin-note strong {
+      color: #323232;
+    }
+
+    @media (max-width: 500px) {
+      .cpa-final {
+        padding: 20px 16px 24px;
+      }
+      .cpa-final .date-input,
+      .cpa-final .btn {
+        font-size: 16px;
+        padding: 16px 12px;
+      }
+      .cpa-final .matrix td {
+        padding: 8px 4px;
+        min-width: 32px;
+      }
+      .cpa-final .matrix .digit {
+        font-size: 16px;
+      }
+      .cpa-final .matrix .label {
+        font-size: 14px;
+      }
+      .cpa-final .descriptions .item p {
+        font-size: 16px !important;
+      }
+      .cpa-final .forecast .year-item .year-label {
+        font-size: 15px;
+      }
+      .cpa-final .forecast .year-item .year-desc p {
+        font-size: 15px !important;
+      }
+      .cpa-final .hexagram .hex-title {
+        font-size: 15px;
+      }
+      .cpa-final .usin table {
+        font-size: 12px;
+      }
+      .cpa-final .usin th,
+      .cpa-final .usin td {
+        padding: 4px 2px;
+      }
+      .cpa-final .usin .element-name {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .cpa-final .date-input,
+      .cpa-final .btn {
+        font-size: 14px;
+        padding: 14px 10px;
+      }
+      .cpa-final .matrix td {
+        padding: 6px 2px;
+        min-width: 28px;
+      }
+      .cpa-final .matrix .digit {
+        font-size: 14px;
+      }
+      .cpa-final .matrix .label {
+        font-size: 12px;
+      }
+      .cpa-final .descriptions .item p {
+        font-size: 14px !important;
+      }
+      .cpa-final .forecast .year-item .year-label {
+        font-size: 14px;
+      }
+      .cpa-final .forecast .year-item .year-desc p {
+        font-size: 14px !important;
+      }
+      .cpa-final .hexagram .hex-title {
+        font-size: 14px;
+      }
+      .cpa-final .usin table {
+        font-size: 11px;
+      }
+      .cpa-final .usin th,
+      .cpa-final .usin td {
+        padding: 3px 1px;
+      }
+      .cpa-final .usin .element-name {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="cpa-final" id="app">
+  <div class="input-row">
+    <input type="text" class="date-input" id="c-date" placeholder="ДД.ММ.ГГГГ" value="14.06.1992" maxlength="10">
+    <button class="btn" id="c-calc-btn">Рассчитать</button>
+  </div>
+
+  <div class="result" id="c-result">
+    <div class="matrix-wrap">
+      <table class="matrix">
+        <tr>
+          <td class="extra-cell" colspan="3" id="c-extra">
+            <span class="digit" id="c-extra-digits">—</span>
+            <span class="label">Дополнительные числа</span>
+          </td>
+        </tr>
+        <tr>
+          <td id="c-1"><span class="digit">—</span><span class="label">Характер</span></td>
+          <td id="c-4"><span class="digit">—</span><span class="label">Здоровье</span></td>
+          <td id="c-7"><span class="digit">—</span><span class="label">Удача</span></td>
+        </tr>
+        <tr>
+          <td id="c-2"><span class="digit">—</span><span class="label">Энергия</span></td>
+          <td id="c-5"><span class="digit">—</span><span class="label">Логика</span></td>
+          <td id="c-8"><span class="digit">—</span><span class="label">Долг</span></td>
+        </tr>
+        <tr>
+          <td id="c-3"><span class="digit">—</span><span class="label">Интерес</span></td>
+          <td id="c-6"><span class="digit">—</span><span class="label">Труд</span></td>
+          <td id="c-9"><span class="digit">—</span><span class="label">Память</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="descriptions" id="c-descriptions">
+      <div class="item" id="c-combo-block">
+        <div class="combo-digits" id="c-combo-digits">—</div>
+        <div id="c-combo-text"></div>
+      </div>
+    </div>
+
+    <div class="forecast" id="c-forecast"></div>
+
+    <div class="hexagram" id="c-hexagram"></div>
+
+    <div class="usin" id="c-usin"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  "use strict";
+
+  // ——— Данные типов мышления ———
+  const typeData = {
+    1: {
+      name: "Наводящий порядок",
+      short: "Человек системы. Главная задача — стабилизация, контроль и поддержание четких правил. Не терпит хаоса, стремится подчинить все единому строгому порядку. Педант, консерватор, ретроград. В сложной ситуации способен навести дисциплину и жестко пресечь инакомыслие.",
+      strengths: "• Быстро структурирует информацию и процессы.\n• Принимает жесткие, но справедливые решения.\n• Отличный организатор и контролер.\n• Верен традициям, стабилен во взглядах.\n• Высокая работоспособность и дисциплина.",
+      risks: "• Излишний консерватизм и полное неприятие нового.\n• Склонность к авторитарности, подавлению чужого мнения.\n• Трудности с гибкостью и адаптацией к переменам.\n• Риск остаться в одиночестве из-за излишней требовательности к другим.",
+      recommendations: "• Учитесь делегировать и доверять другим.\n• Иногда отступайте от правил — это открывает новые возможности.\n• Развивайте эмпатию: люди важнее инструкций.\n• Ставьте цели, выходящие за рамки привычного порядка.",
+      fields: "Государственное управление, военное дело, аудит, юриспруденция, логистика, управление проектами, административная работа, преподавание дисциплин, требующих строгой системы.",
+      interaction: "Лучше всего работать с «копирующими» и «создающими свой мир» — они помогут внедрять новое, не нарушая общей структуры. Избегайте конфликтов с «революционерами» — они могут разрушить вашу систему."
+    },
+    2: {
+      name: "Копирующий",
+      short: "Мастер воспроизведения и адаптации. Берет готовые проверенные решения и доводит их до совершенства. Не изобретает велосипед, но делает его лучше, быстрее, надежнее. Идеальный исполнитель и последователь, который превращает любую идею в реальный продукт.",
+      strengths: "• Отлично работает по инструкции и алгоритму.\n• Быстро обучается на чужих примерах.\n• Высокая эффективность в повторяющихся процессах.\n• Практичен и рационален.\n• Находит лучшее из существующего и применяет.",
+      risks: "• Зависимость от чужих идей и шаблонов.\n• Сложность с созданием принципиально новых решений.\n• Риск стать «серой массой» без собственного лица.\n• Потеря мотивации при отсутствии готового образца.",
+      recommendations: "• Вносите свои улучшения в копируемые модели.\n• Изучайте сразу несколько источников — это даст материал для комбинаций.\n• Экспериментируйте, отходя от шаблона на 10–20 %.\n• Ставьте цель не просто повторить, а превзойти оригинал.",
+      fields: "Производство, серийное проектирование, образование (по методикам), торговля, медицинская практика, техническое обслуживание, любые виды деятельности, где важна повторяемость и качество.",
+      interaction: "Отлично сработаетесь с «создающими свой мир» — они генерируют идеи, вы реализуете. С «наводящими порядок» — взаимопонимание в вопросах дисциплины. Избегайте «мечтателей-разрушителей» — их идеи могут сбить вас с толку."
+    },
+    3: {
+      name: "Создающий свой мир",
+      short: "Творец, конструктор, архитектор своей реальности. Создает нечто уникальное, имеющее внутреннюю логику и гармонию. Его мир — завершенная система, которую он постоянно совершенствует. Вдохновляется возможностью построить что-то с нуля: бизнес, теорию, произведение искусства.",
+      strengths: "• Видит целостную картину и создает системы.\n• Оригинален и нестандартно мыслит.\n• Высокая самодисциплина и целеустремленность.\n• Доводит замыслы до логического завершения.\n• Внутренне независим и уверен в своих идеях.",
+      risks: "• Склонность к самоизоляции в своем мире.\n• Трудности с принятием чужого мнения.\n• Излишний перфекционизм, тормозящий реализацию.\n• Риск потерять связь с реальными потребностями общества.",
+      recommendations: "• Регулярно проверяйте свои модели на соответствие реальности.\n• Допускайте обратную связь — она улучшит ваши творения.\n• Иногда выходите за пределы своей системы, чтобы вдохновиться.\n• Делитесь наработками — это даст вам новых союзников.",
+      fields: "Фундаментальная наука, инженерия, архитектура, предпринимательство, искусство (живопись, музыка, литература), дизайн, разработка ПО, создание учебных курсов.",
+      interaction: "Лучшие партнеры — «копирующие» (воплощают модели) и «ищущие новое» (подсказывают направления развития). Старайтесь не конфликтовать с «революционерами» — они могут попытаться разрушить вашу систему."
+    },
+    4: {
+      name: "Ищущий новое",
+      short: "Первооткрыватель и исследователь. Влечет неизведанное, интуитивно чувствует направления, которые станут важными в будущем. Не создает готовых моделей, но прокладывает маршруты для тех, кто придет следом. Ум постоянно ищет новые связи, закономерности и горизонты.",
+      strengths: "• Интуитивно предвидит будущие тенденции.\n• Выделяет ключевые вопросы из потока информации.\n• Гибок умом и открыт новому.\n• Видит неочевидные взаимосвязи.\n• Вдохновлен и полон энтузиазма в исследовании неизведанного.",
+      risks: "• Поверхностность — поиск мешает глубокому изучению.\n• Склонность к прожектерству без практической реализации.\n• Потеря фокуса из-за множества интересов.\n• Риск остаться непонятым из-за опережения времени.",
+      recommendations: "• Учитесь останавливаться и углубляться в найденное.\n• Фиксируйте инсайты — они могут стать основой для чужих открытий.\n• Сотрудничайте с «создающими свой мир» — они превратят ваши идеи в системы.\n• Ограничьте количество параллельных тем, чтобы не распылять силы.",
+      fields: "Фундаментальная наука, философия, футурология, стратегическое планирование, аналитика, разведка, научная журналистика, преподавание, разработка новых технологий на ранних стадиях.",
+      interaction: "Отлично работаете в паре с «создающими свой мир» — они воплотят ваши поиски. С «революционерами» общий язык — вы оба смотрите в будущее. Будьте терпимы к «наводящим порядок» — они помогут внедрить ваши открытия в жизнь."
+    },
+    5: {
+      name: "Революционер",
+      short: "Носитель нового видения. Не просто ищет новое — меняет саму систему координат, по которой мир оценивается. Идеи кажутся радикальными, но именно они двигают эпохи. Создает новые ценности, смыслы и принципы, которые постепенно становятся нормой для всех.",
+      strengths: "• Коренным образом переосмысливает привычное.\n• Харизматичен, увлекает за собой.\n• Смел, готов идти против течения.\n• Видит глобальные перспективы.\n• Обладает энергией и напором, способным сдвинуть горы.",
+      risks: "• Конфликтность с теми, кто не принимает идей.\n• Риск оторваться от реальности и стать догматиком.\n• Потеря поддержки из-за слишком резких перемен.\n• Выгорание от постоянного сопротивления среды.",
+      recommendations: "• Учитесь доносить идеи языком, понятным для всех уровней.\n• Создавайте команду единомышленников — одиночке трудно перевернуть мир.\n• Проверяйте революционные идеи на малых проектах.\n• Помните о важности плавных переходов — не все готовы к быстрым переменам.",
+      fields: "Политика, общественные движения, стартапы с прорывными технологиями, режиссура, архитектурное проектирование, инновационные исследования, искусство авангарда, стратегическое консультирование.",
+      interaction: "Нужны «копирующие» для массовой реализации идей и «наводящие порядок» для структурирования нового. Будьте осторожны с «мечтателями-разрушителями» — они могут увести в бездну нереализуемых фантазий."
+    },
+    6: {
+      name: "Мечтатель, разрушитель",
+      short: "Человек на грани гениальности и хаоса. Сознание вмещает идеи столь грандиозные, что они не укладываются в рамки существующего мира. Способен разрушать устаревшее, чтобы освободить место для нового, но часто остается непонятым. Его задача — мечтать о совершенном мире и показывать, каким он может быть, даже если сегодня это кажется утопией.",
+      strengths: "• Безграничное воображение и творческий потенциал.\n• Видит недостатки системы и предлагает радикальные альтернативы.\n• Искренен и глубок в переживаниях.\n• Его вдохновение передается другим.\n• Уникален и неповторим в мышлении.",
+      risks: "• Склонность к депрессии и разочарованию в реальности.\n• Неспособность довести мечты до практической реализации.\n• Конфликты с окружающими из-за непонимания.\n• Опасность разрушить не только старое, но и важное, ценное.",
+      recommendations: "• Записывайте свои мечты — они могут стать основой для будущих проектов.\n• Окружите себя «копирующими» или «создающими свой мир» — они помогут придать фантазиям форму.\n• Ищите единомышленников, способных разделить ваши идеи.\n• Помните: даже самая смелая мечта требует первых шагов — начните с малого.",
+      fields: "Фантастическая литература, философия, кино, театр, экспериментальная музыка, дизайн будущего, инновационные разработки на стыке наук, транслирование новых смыслов через искусство.",
+      interaction: "Необходима поддержка «наводящих порядок» (структурируют идеи) и «копирующих» (воплощают в прототипы). Избегайте конфликтов с «революционерами» — вы оба сильны, но ваши цели могут не совпадать."
+    }
+  };
+
+  // ——— Вспомогательные функции ———
+  function sumDigits(n) {
+    if (n === undefined || n === null) return 0;
+    var s = String(Math.abs(n));
+    var t = 0;
+    for (var i = 0; i < s.length; i++) t += parseInt(s.charAt(i), 10);
+    return t;
+  }
+
+  function getFirstDigit(s) {
+    if (!s) return 0;
+    return parseInt(s.charAt(0), 10);
+  }
+
+  function parseDate(str) {
+    var clean = str.replace(/[^0-9]/g, '');
+    if (clean.length !== 8) return null;
+    return {
+      day: parseInt(clean.substring(0, 2), 10),
+      month: parseInt(clean.substring(2, 4), 10),
+      year: parseInt(clean.substring(4, 8), 10)
+    };
+  }
+
+  function calcNumbers(d, m, y) {
+    var sum = sumDigits(d) + sumDigits(m) + sumDigits(y);
+    var first = sum;
+    var second = sumDigits(first);
+    var ds = String(d) + String(m) + String(y);
+    var fd = getFirstDigit(ds);
+    var third = first - 2 * fd;
+    var fourth = sumDigits(third);
+    return { first: first, second: second, third: third, fourth: fourth };
+  }
+
+  function getCounts(d, m, y, extra) {
+    var c = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
+    function add(n) {
+      if (n === undefined || n === null || isNaN(n)) return;
+      var s = String(Math.abs(n));
+      for (var i = 0; i < s.length; i++) {
+        var dig = parseInt(s.charAt(i), 10);
+        if (!isNaN(dig)) c[dig] = (c[dig] || 0) + 1;
+      }
+    }
+    add(d);
+    add(m);
+    add(y);
+    add(extra.first);
+    add(extra.second);
+    add(extra.third);
+    add(extra.fourth);
+    return c;
+  }
+
+  function renderCount(c, digit) {
+    var v = c[digit] || 0;
+    return v === 0 ? '—' : String(digit).repeat(v);
+  }
+
+  // ——— Определение типа мышления ———
+  function getThinkingType(cnt) {
+    var a = cnt[1] || 0, b = cnt[4] || 0, c = cnt[7] || 0;
+    var o = cnt[2] || 0, m = cnt[5] || 0, p = cnt[8] || 0;
+    var k = cnt[3] || 0, n = cnt[6] || 0, r = cnt[9] || 0;
+
+    var delta = a * m - b * o;
+    var Delta = a * m * r + b * p * k + c * o * n - (c * m * k + b * o * r + a * p * n);
+
+    if (delta === 0 && Delta === 0) return 1;
+    if (delta < 0 && Delta !== 0) return 2;
+    if (delta > 0 && Delta !== 0) return 3;
+    if (delta === 0 && Delta !== 0) return 4;
+    if (delta < 0 && Delta === 0) return 5;
+    if (delta > 0 && Delta === 0) return 6;
+    return 4;
+  }
+
+  function getThinkingTypeForDate(day, month, year) {
+    var extra = calcNumbers(day, month, year);
+    var cnt = getCounts(day, month, year, extra);
+    return getThinkingType(cnt);
+  }
+
+  // ——— Гексаграмма (исправленный алгоритм) ———
+  function getHexagram(cnt) {
+    // Линии снизу вверх согласно инструкции:
+    // 1 (нижняя): 6+9
+    // 2: 1+2
+    // 3: 8+5
+    // 4: 0+3
+    // 5: 7
+    // 6 (верхняя): 4
+    var line1 = ((cnt[6] || 0) + (cnt[9] || 0)) % 2 === 0 ? 0 : 1;
+    var line2 = ((cnt[1] || 0) + (cnt[2] || 0)) % 2 === 0 ? 0 : 1;
+    var line3 = ((cnt[8] || 0) + (cnt[5] || 0)) % 2 === 0 ? 0 : 1;
+    var line4 = ((cnt[0] || 0) + (cnt[3] || 0)) % 2 === 0 ? 0 : 1;
+    var line5 = (cnt[7] || 0) % 2 === 0 ? 0 : 1;
+    var line6 = (cnt[4] || 0) % 2 === 0 ? 0 : 1;
+
+    // Порядок битов: нижняя линия – младший бит (1) ??? НЕТ!
+    // В инструкции: линии записываются снизу вверх, но при формировании индекса
+    // для таблицы мы должны использовать порядок: нижняя, средняя, верхняя – как биты:
+    // старший бит – нижняя, средний – средняя, младший – верхняя (потому что в таблице
+    // строки идут сверху вниз, но здесь мы строим индекс по-другому).
+    // Проверим примеры: для даты 1.2.2026 линии снизу вверх: Ян, Инь, Инь, Инь, Инь, Ян.
+    // Т.е. line1=1, line2=0, line3=0, line4=0, line5=0, line6=1.
+    // По таблице для гексаграммы 27 (Питание) нижняя триграмма – это 110 (по порядку снизу-вверх: 1,1,0?) 
+    // Питание (27) имеет верхнюю триграмму Гора (100? нет) и нижнюю Земля (000?)... Давайте проверим.
+    // В книге И-Цзин: гексаграмма 27 (Питание) – нижняя триграмма Чжэнь (Гром) = 100 (снизу вверх: 1,0,0?) 
+    // Гром – это 1 (нижняя), 0 (средняя), 0 (верхняя) ? Нет, в таблице триграмм: Чжэнь = 100 (снизу: 1, средняя: 0, верхняя: 0) – да.
+    // Верхняя триграмма Гэнь (Гора) = 001 (снизу: 0, средняя: 0, верхняя: 1).
+    // Тогда гексаграмма 27 – нижняя: 100, верхняя: 001.
+    // В нашем примере линии снизу вверх: 1 (нижняя), 0 (вторая), 0 (третья) -> это 100 – нижняя триграмма.
+    // линии 4 (нижняя верхней), 5, 6: 0,0,1 -> это 001 – верхняя триграмма.
+    // Теперь как мы формируем индекс? В коде мы делали:
+    // lowBits = (line3 << 2) | (line2 << 1) | line1 – это даёт 0*4 + 0*2 + 1 = 1 – не 4 (100 это 4).
+    // Значит, правильный порядок для lowBits должен давать 4 для (1,0,0). То есть (line1 << 2) | (line2 << 1) | line3 = 1*4 + 0*2 + 0 = 4.
+    // А для highBits должно дать 1 для (0,0,1): (line4 << 2) | (line5 << 1) | line6 = 0*4 + 0*2 + 1 = 1.
+    // Это соответствует таблице, где строка индекса lowBits (0..7) соответствует нижней триграмме.
+    // Итак, правильный порядок:
+    var lowBits = (line1 << 2) | (line2 << 1) | line3;
+    var highBits = (line4 << 2) | (line5 << 1) | line6;
+
+    // Таблица гексаграмм (стандартная, из книг)
+    var table = [
+      [2, 23, 8, 20, 16, 35, 45, 12],
+      [15, 52, 39, 53, 62, 56, 31, 33],
+      [7, 4, 29, 59, 40, 64, 47, 6],
+      [46, 18, 48, 57, 32, 50, 28, 44],
+      [24, 27, 3, 42, 51, 21, 17, 25],
+      [36, 22, 63, 37, 55, 30, 49, 13],
+      [19, 41, 60, 61, 54, 38, 58, 10],
+      [11, 26, 5, 9, 34, 14, 43, 1]
+    ];
+
+    var num = table[lowBits][highBits];
+    var names = [
+      "Цянь (Творчество)", "Кунь (Исполнение)", "Чжунь (Начальная трудность)", "Мэн (Недоразвитость)",
+      "Сюй (Ожидание)", "Сун (Суд)", "Ши (Войско)", "Би (Приближение)",
+      "Сяо-чу (Воспитание малым)", "Люй (Поступь)", "Тай (Расцвет)", "Пи (Застой)",
+      "Тун-жэнь (Общность)", "Да-ю (Обладание великим)", "Цянь (Смирение)", "Юй (Предусмотрительность)",
+      "Суй (Следование)", "Гу (Исправление порчи)", "Линь (Посещение)", "Гуань (Созерцание)",
+      "Ши-хэ (Стиснутые зубы)", "Би (Убранство)", "Бо (Разрушение)", "Фу (Возврат)",
+      "У-ван (Беспорочность)", "Да-чу (Воспитание великим)", "И (Питание)", "Да-го (Переразвитие великого)",
+      "Кань (Повторная опасность)", "Ли (Сияние)", "Сянь (Взаимодействие)", "Хэн (Постоянство)",
+      "Дунь (Бегство)", "Да-чжуан (Мощь великого)", "Цзинь (Восход)", "Мин-и (Поражение света)",
+      "Цзя-жэнь (Домашние)", "Куй (Разлад)", "Цзянь (Препятствие)", "Цзе (Разрешение)",
+      "Сунь (Убыль)", "И (Приумножение)", "Гуай (Выход)", "Гоу (Перечение)",
+      "Цуй (Воссоединение)", "Шэн (Подъем)", "Кунь (Истощение)", "Цзин (Колодец)",
+      "Гэ (Смена)", "Дин (Жертвенник)", "Чжэнь (Гром)", "Гэнь (Гора)",
+      "Цзянь (Течение)", "Гуй-мэй (Невеста)", "Фэн (Изобилие)", "Люй (Странствие)",
+      "Сюнь (Ветер)", "Дуй (Радость)", "Хуань (Раздробление)", "Цзе (Ограничение)",
+      "Чжун-фу (Внутренняя искренность)", "Сяо-го (Переразвитие малого)", "Цзи-цзи (Уже конец)", "Вэй-цзи (Ещё не конец)"
+    ];
+    var name = names[num-1];
+    return { number: num, name: name };
+  }
+
+  // ——— У-Син ———
+  function getStatus(count) {
+    if (count === 0) return { text: 'Пустота', cls: 'pustota' };
+    if (count === 1) return { text: 'Слабость', cls: 'slabost' };
+    if (count === 2) return { text: 'Норма', cls: 'norma' };
+    if (count === 3) return { text: 'Нестабильность', cls: 'nestabil' };
+    return { text: 'Перегрузка', cls: 'peregruz' };
+  }
+
+  function buildUsin(cnt) {
+    var elements = [
+      { name: 'Огонь', yang: { digit: 4, name: 'Тонкая кишка' }, yin: { digit: 7, name: 'Сердце' } },
+      { name: 'Земля', yang: { digit: 3, name: 'Желудок' }, yin: { digit: 5, name: 'Селезенка' } },
+      { name: 'Металл', yang: { digit: 2, name: 'Толстая кишка' }, yin: { digit: 9, name: 'Легкие' } },
+      { name: 'Вода', yang: { digit: 1, name: 'Мочевой пузырь' }, yin: { digit: 6, name: 'Почки' } },
+      { name: 'Дерево', yang: { digit: 0, name: 'Желчный пузырь' }, yin: { digit: 8, name: 'Печень' } }
+    ];
+
+    var rows = [];
+    for (var i = 0; i < elements.length; i++) {
+      var el = elements[i];
+      var yangVal = cnt[el.yang.digit] || 0;
+      var yinVal = cnt[el.yin.digit] || 0;
+      var yangStatus = getStatus(yangVal);
+      var yinStatus = getStatus(yinVal);
+
+      var isReversed = (yangVal === 0 && yinVal > 0) || (yinVal === 0 && yangVal > 0);
+      var isFrozen = (yangVal === yinVal) && yangVal > 0;
+
+      var anomalyText = '';
+      var anomalyCls = '';
+      if (isReversed) {
+        anomalyText = 'Элемент-перевертыш';
+        anomalyCls = 'reversed';
+      } else if (isFrozen) {
+        anomalyText = 'Застывший элемент';
+        anomalyCls = 'frozen';
+      }
+
+      rows.push({
+        name: el.name,
+        yangName: el.yang.name + ' (' + el.yang.digit + ')',
+        yangVal: yangVal,
+        yangStatus: yangStatus,
+        yinName: el.yin.name + ' (' + el.yin.digit + ')',
+        yinVal: yinVal,
+        yinStatus: yinStatus,
+        anomaly: anomalyText,
+        anomalyCls: anomalyCls
+      });
+    }
+    return rows;
+  }
+
+  function renderUsin(rows) {
+    var html = '';
+    html += '<div class="usin-title">Схема здоровья У-Син</div>';
+    html += '<table>';
+    html += '<thead><tr><th>Элемент</th><th>Ян-орган</th><th>Инь-орган</th><th>Особенности</th></tr></thead>';
+    html += '<tbody>';
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      html += '<tr>';
+      html += '<td class="element-name">' + r.name + '</td>';
+      html += '<td>' + r.yangName + ': ' + r.yangVal + ' <span class="status ' + r.yangStatus.cls + '">(' + r.yangStatus.text + ')</span></td>';
+      html += '<td>' + r.yinName + ': ' + r.yinVal + ' <span class="status ' + r.yinStatus.cls + '">(' + r.yinStatus.text + ')</span></td>';
+      html += '<td>';
+      if (r.anomaly) {
+        html += '<span class="anomaly ' + r.anomalyCls + '">' + r.anomaly + '</span>';
+      } else {
+        html += '—';
+      }
+      html += '</td>';
+      html += '</tr>';
+    }
+    html += '</tbody></table>';
+
+    html += '<div class="usin-note">';
+    html += '<p><strong>Пустота</strong> – критический дефицит.</p>';
+    html += '<p><strong>Слабость</strong> – энергии на поддержание себя.</p>';
+    html += '<p><strong>Норма</strong> – гармония.</p>';
+    html += '<p><strong>Нестабильность</strong> – пульсация, скачки.</p>';
+    html += '<p><strong>Перегрузка</strong> – избыток, работа на износ.</p>';
+    html += '<p><strong>Элемент-перевертыш</strong> – один орган пуст, другой заполнен (внутренний конфликт).</p>';
+    html += '<p><strong>Застывший элемент</strong> – органы равны по силе (застой энергии).</p>';
+    html += '</div>';
+
+    return html;
+  }
+
+  // ——— Главная функция расчёта ———
+  function calculate() {
+    var inp = document.getElementById('c-date');
+    var res = document.getElementById('c-result');
+    var desc = document.getElementById('c-descriptions');
+    var titleBlock = document.getElementById('c-combo-digits');
+    var textBlock = document.getElementById('c-combo-text');
+    var hexBlock = document.getElementById('c-hexagram');
+    var usinBlock = document.getElementById('c-usin');
+
+    if (!inp || !res || !desc || !titleBlock || !textBlock || !hexBlock || !usinBlock) {
+      console.error('Элементы не найдены');
+      return;
+    }
+
+    var ds = inp.value.trim();
+    var parsed = parseDate(ds);
+    if (!parsed) {
+      alert('Введите дату в формате ДД.ММ.ГГГГ (например, 15.04.1972)');
+      return;
+    }
+
+    var d = parsed.day, m = parsed.month, y = parsed.year;
+    try {
+      var extra = calcNumbers(d, m, y);
+      var cnt = getCounts(d, m, y, extra);
+
+      var absThird = Math.abs(extra.third);
+      var absFourth = Math.abs(extra.fourth);
+      var extraStr = extra.first + '-' + extra.second + '-' + absThird + '-' + absFourth;
+      document.getElementById('c-extra-digits').textContent = extraStr;
+
+      for (var i = 1; i <= 9; i++) {
+        var cell = document.getElementById('c-' + i);
+        if (!cell) continue;
+        var disp = renderCount(cnt, i);
+        var sp = cell.querySelector('.digit');
+        if (sp) sp.textContent = disp;
+        if (disp === '—') cell.classList.add('empty');
+        else cell.classList.remove('empty');
+      }
+
+      var typeId = getThinkingType(cnt);
+      var data = typeData[typeId];
+      if (!data) {
+        textBlock.innerHTML = '<p>Не удалось определить тип мышления.</p>';
+        return;
+      }
+
+      titleBlock.textContent = 'Ваш Тип Мышления: «' + data.name + '».';
+
+      var fullHtml = '';
+      fullHtml += '<p><strong>Сильные стороны:</strong><br>' + data.strengths.replace(/\n/g, '<br>') + '</p>';
+      fullHtml += '<p><strong>Возможные риски:</strong><br>' + data.risks.replace(/\n/g, '<br>') + '</p>';
+      fullHtml += '<p><strong>Рекомендации по саморазвитию:</strong><br>' + data.recommendations.replace(/\n/g, '<br>') + '</p>';
+      fullHtml += '<p><strong>Идеальные сферы деятельности:</strong><br>' + data.fields + '</p>';
+      fullHtml += '<p><strong>Взаимодействие с другими типами:</strong><br>' + data.interaction + '</p>';
+
+      var html = '';
+      html += '<p class="short-desc">' + data.short + '</p>';
+      html += '<button class="toggle-btn" id="c-toggle-btn">Подробнее ▼</button>';
+      html += '<div class="full-desc" id="c-full-desc">' + fullHtml + '</div>';
+
+      textBlock.innerHTML = html;
+
+      var toggleBtn = document.getElementById('c-toggle-btn');
+      var fullDesc = document.getElementById('c-full-desc');
+      if (toggleBtn && fullDesc) {
+        toggleBtn.addEventListener('click', function(e) {
+          var isOpen = fullDesc.classList.contains('open');
+          if (isOpen) {
+            fullDesc.classList.remove('open');
+            toggleBtn.innerHTML = 'Подробнее ▼';
+          } else {
+            fullDesc.classList.add('open');
+            toggleBtn.innerHTML = 'Подробнее ▲';
+          }
+        });
+      }
+
+      res.classList.add('show');
+      desc.classList.add('show');
+
+      // ——— Прогноз на 2025–2035 ———
+      var forecastContainer = document.getElementById('c-forecast');
+      if (!forecastContainer) return;
+      forecastContainer.innerHTML = '';
+
+      var startYear = 2025;
+      var endYear = 2035;
+      var dayFc = parsed.day;
+      var monthFc = parsed.month;
+
+      for (var yr = startYear; yr <= endYear; yr++) {
+        var yearType = getThinkingTypeForDate(dayFc, monthFc, yr);
+        var dataYear = typeData[yearType];
+        if (!dataYear) continue;
+
+        var item = document.createElement('div');
+        item.className = 'year-item';
+
+        var label = document.createElement('span');
+        label.className = 'year-label';
+        var displayName = yr + ': ' + dataYear.name + ' ';
+        label.innerHTML = displayName + '<span class="arrow">▼</span>';
+
+        var descDiv = document.createElement('div');
+        descDiv.className = 'year-desc';
+
+        var fullYearHtml = '';
+        fullYearHtml += '<div class="type-name">' + dataYear.name + '</div>';
+        fullYearHtml += '<p><strong>Сильные стороны:</strong><br>' + dataYear.strengths.replace(/\n/g, '<br>') + '</p>';
+        fullYearHtml += '<p><strong>Возможные риски:</strong><br>' + dataYear.risks.replace(/\n/g, '<br>') + '</p>';
+        fullYearHtml += '<p><strong>Рекомендации по саморазвитию:</strong><br>' + dataYear.recommendations.replace(/\n/g, '<br>') + '</p>';
+        fullYearHtml += '<p><strong>Идеальные сферы деятельности:</strong><br>' + dataYear.fields + '</p>';
+        fullYearHtml += '<p><strong>Взаимодействие с другими типами:</strong><br>' + dataYear.interaction + '</p>';
+        descDiv.innerHTML = fullYearHtml;
+
+        item.addEventListener('click', function(e) {
+          var arrow = this.querySelector('.arrow');
+          var desc = this.querySelector('.year-desc');
+          if (!desc) return;
+          var isOpen = desc.classList.contains('open');
+          if (isOpen) {
+            desc.classList.remove('open');
+            if (arrow) arrow.textContent = '▼';
+          } else {
+            desc.classList.add('open');
+            if (arrow) arrow.textContent = '▲';
+          }
+        });
+
+        item.appendChild(label);
+        item.appendChild(descDiv);
+        forecastContainer.appendChild(item);
+      }
+
+      // ——— Гексаграмма ———
+      var hex = getHexagram(cnt);
+      hexBlock.innerHTML = '';
+      var hexTitle = document.createElement('div');
+      hexTitle.className = 'hex-title';
+      hexTitle.textContent = 'Гексаграмма №' + hex.number + ' — ' + hex.name;
+      hexBlock.appendChild(hexTitle);
+
+      // ——— У-Син ———
+      var rows = buildUsin(cnt);
+      usinBlock.innerHTML = renderUsin(rows);
+
+    } catch (e) {
+      alert('Ошибка: ' + e.message);
+      console.error(e);
+    }
+  }
+
+  // ——— Инициализация ———
+  function initInput() {
+    var inp = document.getElementById('c-date');
+    if (!inp) return;
+    inp.addEventListener('input', function(e) {
+      var v = this.value.replace(/[^0-9]/g, '');
+      var f = '';
+      if (v.length > 0) f += v.substring(0, 2);
+      if (v.length >= 3) f += '.' + v.substring(2, 4);
+      if (v.length >= 5) f += '.' + v.substring(4, 8);
+      this.value = f;
+    });
+    inp.addEventListener('keydown', function(e) {
+      var allow = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+      if (allow.includes(e.key)) return;
+      if (!/^[0-9]$/.test(e.key)) e.preventDefault();
+    });
+  }
+
+  function init() {
+    initInput();
+    var btn = document.getElementById('c-calc-btn');
+    if (btn) {
+      btn.addEventListener('click', calculate);
+      console.log('Калькулятор загружен (исправленная гексаграмма)');
+    } else {
+      console.error('Кнопка не найдена');
+    }
+    setTimeout(calculate, 100);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
